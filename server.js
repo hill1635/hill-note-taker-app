@@ -20,7 +20,7 @@ app.get("/notes", function (req, res) {
 app.get("/api/notes", function (req, res) {
     //Reads JSON file
     //Returns all saved notes as JSON
-    //return res.json(____);
+    return res.json(notes);
 });
 
 app.post("/api/notes", function (req, res) {
