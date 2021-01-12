@@ -13,11 +13,11 @@ app.use(express.json());
 
 //HTML Routes
 app.get("/", function (req, res) {
-    res.sendFile(path.join(__dirname, "index.html"));
+    res.sendFile(path.join(__dirname, "public/index.html"));
 });
 
 app.get("/notes", function (req, res) {
-    res.sendFile(path.join(__dirname, "notes.html"));
+    res.sendFile(path.join(__dirname, "public/notes.html"));
 });
 
 //API Route
@@ -27,15 +27,28 @@ app.get("/api/notes", function (req, res) {
         if (err) throw (err);
         console.log(data);
     });
-    console.log(notes);
+    notes = JSON.parse(notes);
     //Returns all saved notes as JSON
     return res.json(notes);
 });
 
 app.post("/api/notes", function (req, res) {
     //Receives new note to save on body
+    var newNote = req.body;
+    newNote.title = $(".note-title").val();
+    newNote.text = $(".note-textarea").val();
+
     //Adds to db.json file
-    fs.writeFile(path.join(outputPath, "db.json"));
+    var note = fs.readFileSync(outputPath, "utf8", (err, data) => {
+        var noteJSON = JSON.parse(data);
+        noteJSON.push(newNote);
+
+        fs.writeFileSync(outputPath, noteJSON, (err) => {
+            if (err) throw err;
+            console.log(noteJSON);
+        });
+    });
+
     //Returns new note to client
     return res.json(note);
 });
