@@ -42,6 +42,12 @@ app.post("/api/notes", function (req, res) {
 
     notes = JSON.parse(notes);
     notes.push(newNote);
+    //Assign ID numbers
+    for (i = 0; i < notes.length; i++) {
+        var note = notes[i];
+        note.id = i;
+        console.log(note);
+    }
     console.log("notes: ", notes);
 
     const writeFile = () => {
@@ -51,16 +57,40 @@ app.post("/api/notes", function (req, res) {
         });
     }
     writeFile();
-        //Returns new note to client
-        return res.json(newNote);
-    });
+    //Returns new note to client
+    return res.json(newNote);
+});
 
 app.delete("/api/notes/:id", function (req, res) {
     //Receive query parameter containing ID of note to delete
+    var chosenID = req.params.id;
+    console.log(chosenID);
     //Each note needs unique ID
     //Need to read all notes from db.json (for loop), and remove note with given ID
+    var notes = fs.readFileSync(outputPath, "utf8", (err, data) => {
+        if (err) throw (err);
+        console.log(data);
+    });
+    notes = JSON.parse(notes);
+    console.log(notes);
+
+    for (i = 0; i < notes.length; i++) {
+        var note = notes[i];
+        if (note.id == chosenID) {
+            notes.splice(note.id, 1);
+        }
+    }
+    console.log("notes after removal: ", notes);
+    notes = JSON.stringify(notes);
     //Rewrite the notes to db.json file
-    fs.writeFile(path.join(outputPath, "db.json"));
+    // const writeFile = () => {
+    //     notes = JSON.stringify(notes);
+    fs.writeFileSync(outputPath, notes, (err) => {
+        if (err) throw (err);
+    });
+    // }
+    // writeFile();
+    return res.json(notes);
 });
 
 app.listen(PORT, function () {
