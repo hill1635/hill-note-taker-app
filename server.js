@@ -33,25 +33,27 @@ app.get("/api/notes", function (req, res) {
 });
 
 app.post("/api/notes", function (req, res) {
-    //Receives new note to save on body
-    var newNote = req.body;
-    newNote.title = $(".note-title").val();
-    newNote.text = $(".note-textarea").val();
+    const newNote = req.body;
 
-    //Adds to db.json file
-    var note = fs.readFileSync(outputPath, "utf8", (err, data) => {
-        var noteJSON = JSON.parse(data);
-        noteJSON.push(newNote);
-
-        fs.writeFileSync(outputPath, noteJSON, (err) => {
-            if (err) throw err;
-            console.log(noteJSON);
-        });
+    var notes = fs.readFileSync(outputPath, "utf8", (err, data) => {
+        if (err) throw (err);
+        console.log(data);
     });
 
-    //Returns new note to client
-    return res.json(note);
-});
+    notes = JSON.parse(notes);
+    notes.push(newNote);
+    console.log("notes: ", notes);
+
+    const writeFile = () => {
+        notes = JSON.stringify(notes);
+        fs.writeFileSync(outputPath, notes, (err) => {
+            if (err) throw err;
+        });
+    }
+    writeFile();
+        //Returns new note to client
+        return res.json(newNote);
+    });
 
 app.delete("/api/notes/:id", function (req, res) {
     //Receive query parameter containing ID of note to delete
