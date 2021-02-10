@@ -21,9 +21,7 @@ To create a new note, the note information was captured into a variable from the
 Finally, the DELETE method was created to be able to delete any previous notes based on ID number.  The ID was captured from the request parameters body from the API delete request and the previous notes were collected with a readFileSync method and parsed out.  To located the note that the user wanted to delete, a for loop was added to cycle through the list of notes and splice out the index (note) that matched with the requested note ID number.  Notes were converted back to strings and the db.json was re-wrote with a writeFileSync method and returned as res.json.
 
 ## Future Developments
-One of the first future developements to tackle for this assignment is sorting out the js and css linking to the html file.  I couldn't for the life of me get them to link properly despite multiple attempts to reconfigure the directory and try to link them in different ways.  In order to get it to work properly, js and css were hard coded into the html file.  In addition to this, separating out the html and api routes into separate files to clean up server.js needs to be done.
-
-Next step in development process is cutting down on repetitive bloat.  The fs.sendFile, fs.readFile, and fs.writeFile methods are used multiple times throughout the API routing and I'm sure there is a much more efficient way to go about that.
+One of the first future developements to tackle for this assignment is sorting out API and HTML routes.  Currently, I was only able to get them to work on the server.js file as there were issues with GET and POST requests with the db.json file.  I believe this is probably a directory issue as __dirname was not being called from the root folder.  Ideally, I would like to clean up the server.js file and separate the routes into API and HTML route javascript files.  Next step in development process is cutting down on repetitive bloat.  The fs.sendFile, fs.readFile, and fs.writeFile methods are used multiple times throughout the API routing and I'm sure there is a much more efficient way to go about that.
 
 ## Screenshots
 Homepage:
